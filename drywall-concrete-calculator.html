@@ -1,0 +1,251 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Drywall Sheets and Concrete Bags Calculator (with waste)</title>
+<meta name="description" content="Work out how many drywall sheets or premix concrete bags a room, slab or patio needs. Free calculator with a waste allowance, and the math written out so you can check it by hand.">
+<link rel="canonical" href="https://ibrahimbilgic.github.io/tallyard-help/drywall-concrete-calculator.html">
+<style>
+:root { --ground:#EDEFF1; --surface:#FFFFFF; --hairline:#D9DDE1; --ink:#16191D; --muted:#565D66; --blade:#FFC82E; --on-blade:#16191D; --field:#F6F7F8; color-scheme: light dark; }
+@media (prefers-color-scheme: dark) { :root { --ground:#17191C; --surface:#202327; --hairline:#30343A; --ink:#F1F2F4; --muted:#A7AEB7; --field:#181A1D; } }
+* { box-sizing: border-box; }
+[hidden] { display:none !important; }
+html { -webkit-text-size-adjust: 100%; }
+body { margin:0; background:var(--ground); color:var(--ink); font:400 17px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif; }
+main { max-width: 700px; margin:0 auto; padding: 0 18px 56px; }
+a { color:inherit; text-decoration-thickness:2px; text-decoration-color:var(--blade); text-underline-offset:3px; }
+a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible { outline:3px solid var(--blade); outline-offset:2px; }
+.topbar { background:var(--blade); color:var(--on-blade); margin:0 -18px; padding:14px 18px 22px; }
+.topbar .crumb { font-size:14px; font-weight:600; margin:0 0 18px; }
+.topbar .crumb a { text-decoration-color:var(--on-blade); }
+h1 { font:800 clamp(30px,7.5vw,44px)/1.08 "Arial Narrow","Helvetica Neue",Arial,sans-serif; letter-spacing:-0.01em; margin:0 0 10px; }
+.lead { margin:0; font-size:18px; font-weight:500; }
+h2 { font:800 25px/1.2 "Arial Narrow","Helvetica Neue",Arial,sans-serif; margin:36px 0 10px; }
+h3 { font-size:18px; margin:22px 0 6px; }
+.card { background:var(--surface); border:2px solid var(--hairline); border-radius:16px; padding:18px 18px 20px; margin-top:18px; }
+.card h2 { margin-top:0; }
+.row { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin:12px 0; }
+.row.one { grid-template-columns:1fr; }
+label { display:block; font-size:14px; font-weight:600; color:var(--muted); margin-bottom:4px; }
+input, select { width:100%; font:inherit; font-size:18px; padding:10px 12px; border:2px solid var(--hairline); border-radius:10px; background:var(--field); color:var(--ink); }
+.seg { display:inline-flex; border:2px solid var(--ink); border-radius:999px; overflow:hidden; margin:2px 0 6px; }
+.seg button { font:inherit; font-size:15px; font-weight:700; padding:6px 16px; border:0; background:transparent; color:var(--ink); cursor:pointer; }
+.seg button[aria-pressed="true"] { background:var(--ink); color:var(--ground); }
+.go { font:inherit; font-weight:800; font-size:18px; background:var(--blade); color:var(--on-blade); border:2px solid var(--on-blade); border-radius:12px; padding:11px 20px; cursor:pointer; margin-top:6px; }
+.out { margin-top:16px; padding:14px 16px; border-left:8px solid var(--blade); background:var(--field); border-radius:6px; min-height:3.2em; }
+.out .big { font:800 32px/1.1 "Arial Narrow","Helvetica Neue",Arial,sans-serif; display:block; }
+.out small { color:var(--muted); display:block; margin-top:6px; }
+.err { color:#B3261E; font-weight:600; }
+@media (prefers-color-scheme: dark) { .err { color:#FF8A80; } }
+code, .sum { font-family:ui-monospace,Menlo,Consolas,monospace; font-size:15px; background:var(--field); border:1px solid var(--hairline); border-radius:6px; padding:1px 6px; }
+pre.sum { display:block; padding:12px 14px; overflow-x:auto; white-space:pre-wrap; line-height:1.6; }
+table { border-collapse:collapse; width:100%; font-size:15px; margin:10px 0; }
+th, td { border-bottom:1px solid var(--hairline); padding:7px 6px; text-align:left; }
+th { color:var(--muted); font-weight:600; }
+details { border-top:1px solid var(--hairline); padding:10px 0; }
+details:last-of-type { border-bottom:1px solid var(--hairline); }
+summary { cursor:pointer; font-weight:700; }
+.app { margin-top:40px; border:2px solid var(--ink); border-radius:16px; padding:18px; }
+.app a.play { display:inline-block; margin-top:6px; font-weight:800; }
+footer { margin-top:30px; color:var(--muted); font-size:14px; }
+@media (max-width:420px) { .row { grid-template-columns:1fr; } }
+</style>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"How many sheets of drywall do I need for a room?","acceptedAnswer":{"@type":"Answer","text":"Find the wall area (2 x (length + width) x height), subtract about 20 square feet per door and 15 square feet per window if you want to skip openings, add the ceiling (length x width) if you are boarding it, add 10 to 15 percent for cuts and waste, then divide by the area of one sheet and round up."}},
+{"@type":"Question","name":"How many bags of concrete are in a cubic yard?","acceptedAnswer":{"@type":"Answer","text":"An 80 lb bag of standard premix makes about 0.60 cubic feet, so a cubic yard (27 cubic feet) takes about 45 bags. A 60 lb bag makes about 0.45 cubic feet, roughly 60 bags per cubic yard."}},
+{"@type":"Question","name":"How do I work out the volume of a concrete slab?","acceptedAnswer":{"@type":"Answer","text":"Multiply length by width by thickness, with all three in the same unit. Divide cubic feet by 27 to get cubic yards. Then add 5 to 10 percent for uneven ground and spillage before you buy."}},
+{"@type":"Question","name":"How many drywall screws per sheet?","acceptedAnswer":{"@type":"Answer","text":"A common rule of thumb is about one screw per square foot of board, which is roughly 32 screws for a 4 x 8 foot sheet."}}
+]}
+</script>
+</head>
+<body>
+<main>
+<header class="topbar">
+  <p class="crumb"><a href="./">Tallyard help</a> / calculators</p>
+  <h1>How many drywall sheets or concrete bags do you need?</h1>
+  <p class="lead">Enter your measurements, pick a waste allowance, and get whole sheets or bags to buy. The math is written out underneath, so you can check it with a pencil.</p>
+</header>
+
+<div class="seg" role="group" aria-label="Units" style="margin-top:18px">
+  <button type="button" id="u-imp" aria-pressed="true">Feet / inches</button>
+  <button type="button" id="u-met" aria-pressed="false">Metres / cm</button>
+</div>
+
+<section class="card" aria-labelledby="dw">
+  <h2 id="dw">Drywall (plasterboard) sheets</h2>
+  <form id="dwForm" novalidate>
+    <div class="row one"><div><label for="dwSurface">What are you boarding?</label>
+      <select id="dwSurface"><option value="walls">Walls only</option><option value="wallsCeiling">Walls and ceiling</option><option value="ceiling">Ceiling only</option></select></div></div>
+    <div class="row">
+      <div><label for="dwL">Room length (<span class="lu">ft</span>)</label><input id="dwL" inputmode="decimal" value="14"></div>
+      <div><label for="dwW">Room width (<span class="lu">ft</span>)</label><input id="dwW" inputmode="decimal" value="12"></div>
+    </div>
+    <div class="row" id="dwWallRow">
+      <div><label for="dwH">Wall height (<span class="lu">ft</span>)</label><input id="dwH" inputmode="decimal" value="8"></div>
+      <div><label for="dwSheet">Sheet size</label><select id="dwSheet"></select></div>
+    </div>
+    <div class="row" id="dwOpenRow">
+      <div><label for="dwDoors">Doors to leave out</label><input id="dwDoors" inputmode="numeric" value="1"></div>
+      <div><label for="dwWin">Windows to leave out</label><input id="dwWin" inputmode="numeric" value="2"></div>
+    </div>
+    <div class="row one"><div><label for="dwWaste">Waste allowance (%)</label><input id="dwWaste" inputmode="decimal" value="10"></div></div>
+    <button class="go" type="submit">Calculate sheets</button>
+  </form>
+  <div class="out" id="dwOut" aria-live="polite"></div>
+</section>
+
+<section class="card" aria-labelledby="cc">
+  <h2 id="cc">Concrete slab: premix bags</h2>
+  <form id="ccForm" novalidate>
+    <div class="row">
+      <div><label for="ccL">Length (<span class="lu">ft</span>)</label><input id="ccL" inputmode="decimal" value="10"></div>
+      <div><label for="ccW">Width (<span class="lu">ft</span>)</label><input id="ccW" inputmode="decimal" value="10"></div>
+    </div>
+    <div class="row">
+      <div><label for="ccT">Thickness (<span class="tu">in</span>)</label><input id="ccT" inputmode="decimal" value="4"></div>
+      <div><label for="ccBag">Bag size</label><select id="ccBag"></select></div>
+    </div>
+    <div class="row one"><div><label for="ccWaste">Waste allowance (%)</label><input id="ccWaste" inputmode="decimal" value="10"></div></div>
+    <button class="go" type="submit">Calculate bags</button>
+  </form>
+  <div class="out" id="ccOut" aria-live="polite"></div>
+</section>
+
+<h2>The drywall math, step by step</h2>
+<p>Everything is plain area arithmetic. For a 14 x 12 ft room with 8 ft walls, one door and two windows, boarding the walls only:</p>
+<pre class="sum">wall area      = 2 x (14 + 12) x 8        = 416 sq ft
+openings       = 1 door x 20 + 2 windows x 15 = 50 sq ft
+board area     = 416 - 50                 = 366 sq ft
+with 10% waste = 366 x 1.10               = 402.6 sq ft
+4 x 8 ft sheet = 32 sq ft
+sheets         = 402.6 / 32 = 12.58       -> 13 sheets</pre>
+<p>Three things move the answer most. <strong>Sheet size:</strong> longer sheets mean fewer joints, but only if you can carry them into the room. <strong>Openings:</strong> many installers board straight over doors and windows and cut them out afterwards, which gives offcuts for small patches. If you do that, put 0 in the door and window boxes. <strong>Waste:</strong> 10 to 15 percent is a usual range for walls; a small or awkward room with lots of corners is the case for the high end.</p>
+<h3>Screws</h3>
+<p>The calculator also shows an approximate screw count: about one screw per square foot of board you are buying (around 32 for a 4 x 8 ft sheet). Treat it as a shopping estimate; your spacing may differ.</p>
+
+<h2>The concrete math, step by step</h2>
+<p>Volume is length x width x thickness in one unit. A 10 x 10 ft patio, 4 in thick:</p>
+<pre class="sum">thickness      = 4 / 12                   = 0.333 ft
+volume         = 10 x 10 x 0.333          = 33.3 cu ft
+with 10% waste = 33.3 x 1.10              = 36.7 cu ft  (1.36 cu yd)
+80 lb bag      = 0.60 cu ft
+bags           = 36.7 / 0.60 = 61.1       -> 62 bags</pre>
+<p>Bag yields are proportional to the weight of the bag. The calculator assumes that an 80 lb bag of standard premix gives 0.60 cu ft of placed concrete and scales from there. Brands differ a little, so look for the yield printed on your bag and, if it is different, treat the result as a close estimate.</p>
+<table>
+  <caption class="sr" style="text-align:left;color:var(--muted);font-size:14px;caption-side:top">Yield per bag, using 0.60 cu ft for 80 lb</caption>
+  <thead><tr><th>Bag</th><th>Makes about</th><th>Bags per cu yd (or m&sup3;)</th></tr></thead>
+  <tbody id="yieldBody"></tbody>
+</table>
+<p>Ready-mix trucks are sold by volume, not bags. If a job is much bigger than a few dozen bags, compare the cost of delivery with mixing by hand.</p>
+
+<h2>Common questions</h2>
+<details><summary>Should I subtract doors and windows?</summary><p>It is your call. Subtracting gives the tightest count. Boarding over openings and cutting them out later wastes more board but is quicker to hang. The calculator lets you pick either by changing the door and window boxes.</p></details>
+<details><summary>How much waste should I add to concrete?</summary><p>5 to 10 percent is typical for a slab on prepared ground, because the base is rarely perfectly level and some mix is lost in mixing and finishing. Round up a little more if your forms are rough.</p></details>
+<details><summary>What thickness is a patio slab?</summary><p>The calculator starts at 4 inches (10 cm), which is a common figure for light foot traffic. For driveways or anything with vehicles, follow local building guidance for thickness and base.</p></details>
+<details><summary>Does this account for rebar, gravel base or formwork?</summary><p>No. It calculates the concrete or board only. Gravel, mesh and lumber are separate quantities.</p></details>
+
+<aside class="app" aria-labelledby="apptitle">
+  <h2 id="apptitle" style="margin-top:0">If you would rather do this on your phone</h2>
+  <p>Tallyard is an Android and iOS material calculator I make: slab, footing, drywall, paint, tile, flooring, stairs and more. It uses the same rules as this page, rounds purchase quantities up, and lets you set a waste allowance. It shows ads, and your measurements stay on your phone.</p>
+  <a class="play" href="https://play.google.com/store/apps/details?id=com.appfellas.tallyard&amp;referrer=utm_source%3Dweb%26utm_medium%3Drules_page%26utm_campaign%3Dorganic">Tallyard on Google Play</a>
+</aside>
+<footer>These figures are estimates for planning a purchase, not engineering advice. Contact: <a href="mailto:fellasontheway@gmail.com?subject=Tallyard">fellasontheway@gmail.com</a> &middot; <a href="privacy.html">Privacy</a></footer>
+</main>
+<script>
+(function () {
+  var FT = 0.3048, IN = 0.0254, LB = 0.45359237, YD = 0.9144;
+  var YIELD_PER_KG = (0.6 * FT * FT * FT) / (80 * LB);
+  var SHEETS = {
+    ft4x8: ["4 x 8 ft", 32 * FT * FT], ft4x10: ["4 x 10 ft", 40 * FT * FT], ft4x12: ["4 x 12 ft", 48 * FT * FT],
+    mm1200x2400: ["1200 x 2400 mm", 1.2 * 2.4], mm1200x2700: ["1200 x 2700 mm", 1.2 * 2.7], mm1200x3000: ["1200 x 3000 mm", 1.2 * 3.0]
+  };
+  var BAGS = {
+    lb40: ["40 lb", 40 * LB], lb50: ["50 lb", 50 * LB], lb60: ["60 lb", 60 * LB], lb80: ["80 lb", 80 * LB],
+    kg20: ["20 kg", 20], kg25: ["25 kg", 25], kg30: ["30 kg", 30], kg40: ["40 kg", 40]
+  };
+  var DOOR = 20 * FT * FT, WINDOW = 15 * FT * FT, SCREWS_PER_M2 = 1 / (FT * FT), EPS = 1e-9;
+  function ceilCount(v) { return Math.ceil(v - EPS); }
+  function withWaste(b, p) { return b * (1 + p / 100); }
+  function drywall(i, waste) {
+    var walls = i.surface !== "ceiling", ceil = i.surface !== "walls";
+    var wallArea = walls ? 2 * (i.length + i.width) * i.wallHeight : 0;
+    var open = walls ? i.doors * DOOR + i.windows * WINDOW : 0;
+    if (walls && open >= wallArea) return { ok: false };
+    var area = wallArea - open + (ceil ? i.length * i.width : 0);
+    var sa = SHEETS[i.sheet][1];
+    var sheets = ceilCount(withWaste(area, waste) / sa);
+    return { ok: true, area: area, sheets: sheets, screws: ceilCount(sheets * sa * SCREWS_PER_M2) };
+  }
+  function bagYield(k) { return BAGS[k][1] * YIELD_PER_KG; }
+  function concrete(vol, waste, bag) {
+    var vw = withWaste(vol, waste);
+    return { vol: vol, volW: vw, bags: ceilCount(vw / bagYield(bag)) };
+  }
+  window.TALLY = { drywall: drywall, concrete: concrete, bagYield: bagYield, SHEETS: SHEETS, BAGS: BAGS };
+  if (typeof document === "undefined") return;
+
+  var imperial = true;
+  function $(id) { return document.getElementById(id); }
+  function num(id) { var s = $(id).value.trim().replace(",", "."); if (!/^(\d+\.?\d*|\.\d+)$/.test(s)) return null; return Number(s); }
+  function fill(sel, table, sys, def) {
+    var cur = sel.value; sel.innerHTML = "";
+    Object.keys(table).forEach(function (k) {
+      var isImp = k.indexOf("ft") === 0 || k.indexOf("lb") === 0;
+      if (isImp !== sys) return;
+      var o = document.createElement("option"); o.value = k; o.textContent = table[k][0]; sel.appendChild(o);
+    });
+    sel.value = sel.querySelector('option[value="' + cur + '"]') ? cur : def;
+  }
+  function fmt(n, d) { return n.toLocaleString("en-US", { maximumFractionDigits: d }); }
+  function setUnits(imp) {
+    imperial = imp;
+    $("u-imp").setAttribute("aria-pressed", imp); $("u-met").setAttribute("aria-pressed", !imp);
+    Array.prototype.forEach.call(document.querySelectorAll(".lu"), function (e) { e.textContent = imp ? "ft" : "m"; });
+    Array.prototype.forEach.call(document.querySelectorAll(".tu"), function (e) { e.textContent = imp ? "in" : "cm"; });
+    fill($("dwSheet"), SHEETS, imp, imp ? "ft4x8" : "mm1200x2400"); fill($("ccBag"), BAGS, imp, imp ? "lb80" : "kg25");
+    var d = imp ? { dwL: 14, dwW: 12, dwH: 8, ccL: 10, ccW: 10, ccT: 4 } : { dwL: 4.2, dwW: 3.6, dwH: 2.4, ccL: 3, ccW: 3, ccT: 10 };
+    for (var k in d) $(k).value = d[k];
+    $("dwOut").innerHTML = ""; $("ccOut").innerHTML = "";
+  }
+  function showSurface() {
+    var w = $("dwSurface").value !== "ceiling";
+    $("dwH").parentNode.style.visibility = w ? "visible" : "hidden";
+    $("dwOpenRow").hidden = !w;
+  }
+  function err(el, msg) { el.innerHTML = '<span class="err">' + msg + "</span>"; }
+  $("u-imp").onclick = function () { setUnits(true); };
+  $("u-met").onclick = function () { setUnits(false); };
+  $("dwSurface").onchange = showSurface;
+  $("dwForm").onsubmit = function (e) {
+    e.preventDefault();
+    var surface = $("dwSurface").value, walls = surface !== "ceiling", u = imperial ? FT : 1;
+    var L = num("dwL"), W = num("dwW"), H = walls ? num("dwH") : 0, dr = walls ? num("dwDoors") : 0, wi = walls ? num("dwWin") : 0, wa = num("dwWaste");
+    if ([L, W, H, dr, wi, wa].some(function (v) { return v === null || v < 0; }) || L <= 0 || W <= 0 || (walls && H <= 0)) return err($("dwOut"), "Please fill in every box with a positive number.");
+    var r = drywall({ length: L * u, width: W * u, wallHeight: H * u, surface: surface, doors: dr, windows: wi, sheet: $("dwSheet").value }, wa);
+    if (!r.ok) return err($("dwOut"), "The doors and windows add up to more than the wall area.");
+    var area = imperial ? fmt(r.area / (FT * FT), 0) + " sq ft" : fmt(r.area, 1) + " m&sup2;";
+    $("dwOut").innerHTML = '<span class="big">' + r.sheets + " sheet" + (r.sheets === 1 ? "" : "s") + " of " + SHEETS[$("dwSheet").value][0] + "</span><small>Board area " + area + ", plus " + wa + "% waste, rounded up. About " + fmt(r.screws, 0) + " screws.</small>";
+  };
+  $("ccForm").onsubmit = function (e) {
+    e.preventDefault();
+    var u = imperial ? FT : 1, tu = imperial ? IN : 0.01;
+    var L = num("ccL"), W = num("ccW"), T = num("ccT"), wa = num("ccWaste");
+    if ([L, W, T, wa].some(function (v) { return v === null || v < 0; }) || L <= 0 || W <= 0 || T <= 0) return err($("ccOut"), "Please fill in every box with a positive number.");
+    var bag = $("ccBag").value, r = concrete(L * u * W * u * T * tu, wa, bag);
+    var vol = imperial ? fmt(r.volW / Math.pow(FT, 3), 1) + " cu ft (" + fmt(r.volW / Math.pow(YD, 3), 2) + " cu yd)" : fmt(r.volW, 2) + " m&sup3;";
+    $("ccOut").innerHTML = '<span class="big">' + r.bags + " bags of " + BAGS[bag][0] + "</span><small>" + vol + " of concrete including " + wa + "% waste. Yield assumed: " + (imperial ? fmt(bagYield(bag) / Math.pow(FT, 3), 2) + " cu ft" : fmt(bagYield(bag) * 1000, 1) + " litres") + " per bag.</small>";
+  };
+  var yb = $("yieldBody");
+  ["lb40", "lb50", "lb60", "lb80", "kg20", "kg25", "kg30", "kg40"].forEach(function (k) {
+    var y = bagYield(k), tr = document.createElement("tr");
+    var perUnit = k.indexOf("lb") === 0 ? fmt(27 * Math.pow(FT, 3) / y, 0) + " per cu yd" : fmt(1 / y, 0) + " per m&sup3;";
+    tr.innerHTML = "<td>" + BAGS[k][0] + "</td><td>" + (k.indexOf("lb") === 0 ? fmt(y / Math.pow(FT, 3), 2) + " cu ft" : fmt(y * 1000, 1) + " L") + "</td><td>" + perUnit + "</td>";
+    yb.appendChild(tr);
+  });
+  setUnits(true); showSurface();
+})();
+</script>
+</body>
+</html>
