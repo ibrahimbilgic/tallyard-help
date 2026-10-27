@@ -1,0 +1,284 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Concrete Calculator: Cubic Yards and Bags for Slabs, Footings and Piers</title>
+<meta name="description" content="Free concrete calculator for slabs, strip footings, pad footings and round piers. Get cubic yards or cubic metres, a ready-mix order and how many 40, 50, 60 or 80 lb (or 20 to 40 kg) premix bags to buy, with waste included.">
+<link rel="canonical" href="https://ibrahimbilgic.github.io/tallyard-help/concrete-calculator.html">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Concrete Calculator: Cubic Yards and Bags for Slabs, Footings and Piers">
+<meta property="og:description" content="Cubic yards, ready-mix order and premix bag count for a slab, footing or pier, with a waste allowance and the math written out.">
+<meta property="og:url" content="https://ibrahimbilgic.github.io/tallyard-help/concrete-calculator.html">
+<meta property="og:site_name" content="Tallyard help">
+<meta property="og:locale" content="en_US">
+<meta name="twitter:card" content="summary">
+<style>
+:root { --ground:#EDEFF1; --surface:#FFFFFF; --hairline:#D9DDE1; --ink:#16191D; --muted:#565D66; --blade:#FFC82E; --on-blade:#16191D; --field:#F6F7F8; color-scheme: light dark; }
+@media (prefers-color-scheme: dark) { :root { --ground:#17191C; --surface:#202327; --hairline:#30343A; --ink:#F1F2F4; --muted:#A7AEB7; --field:#181A1D; } }
+* { box-sizing: border-box; }
+[hidden] { display:none !important; }
+html { -webkit-text-size-adjust: 100%; }
+body { margin:0; background:var(--ground); color:var(--ink); font:400 17px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif; }
+main { max-width: 700px; margin:0 auto; padding: 0 18px 56px; }
+a { color:inherit; text-decoration-thickness:2px; text-decoration-color:var(--blade); text-underline-offset:3px; }
+a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible { outline:3px solid var(--blade); outline-offset:2px; }
+.topbar { background:var(--blade); color:var(--on-blade); margin:0 -18px; padding:14px 18px 22px; }
+.topbar .crumb { font-size:14px; font-weight:600; margin:0 0 18px; }
+.topbar .crumb a { text-decoration-color:var(--on-blade); }
+h1 { font:800 clamp(30px,7.5vw,44px)/1.08 "Arial Narrow","Helvetica Neue",Arial,sans-serif; letter-spacing:-0.01em; margin:0 0 10px; }
+h1 .sub { display:block; font-size:0.55em; line-height:1.2; margin-top:6px; }
+.lead { margin:0; font-size:18px; font-weight:500; }
+h2 { font:800 25px/1.2 "Arial Narrow","Helvetica Neue",Arial,sans-serif; margin:36px 0 10px; }
+h3 { font-size:18px; margin:22px 0 6px; }
+.card { background:var(--surface); border:2px solid var(--hairline); border-radius:16px; padding:18px 18px 20px; margin-top:18px; }
+.card h2 { margin-top:0; }
+.row { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin:12px 0; }
+.row.one { grid-template-columns:1fr; }
+label { display:block; font-size:14px; font-weight:600; color:var(--muted); margin-bottom:4px; }
+input, select { width:100%; font:inherit; font-size:18px; padding:10px 12px; border:2px solid var(--hairline); border-radius:10px; background:var(--field); color:var(--ink); }
+.seg { display:inline-flex; border:2px solid var(--ink); border-radius:999px; overflow:hidden; margin:2px 0 6px; }
+.seg button { font:inherit; font-size:15px; font-weight:700; padding:6px 16px; border:0; background:transparent; color:var(--ink); cursor:pointer; }
+.seg button[aria-pressed="true"] { background:var(--ink); color:var(--ground); }
+.go { font:inherit; font-weight:800; font-size:18px; background:var(--blade); color:var(--on-blade); border:2px solid var(--on-blade); border-radius:12px; padding:11px 20px; cursor:pointer; margin-top:6px; }
+.out { margin-top:16px; padding:14px 16px; border-left:8px solid var(--blade); background:var(--field); border-radius:6px; min-height:3.2em; }
+.out .big { font:800 32px/1.1 "Arial Narrow","Helvetica Neue",Arial,sans-serif; display:block; }
+.out small { color:var(--muted); display:block; margin-top:6px; }
+.out dl { display:grid; grid-template-columns:1fr auto; gap:4px 12px; margin:12px 0 0; }
+.out dt { margin:0; }
+.out dd { margin:0; font-weight:700; text-align:right; white-space:nowrap; }
+.out dt.or { color:var(--muted); font-size:14px; grid-column:1 / -1; }
+.out .more dt, .out .more dd { color:var(--muted); font-size:15px; font-weight:400; }
+.out .more { border-top:1px solid var(--hairline); padding-top:8px; }
+.err { color:#B3261E; font-weight:600; }
+@media (prefers-color-scheme: dark) { .err { color:#FF8A80; } }
+code, .sum { font-family:ui-monospace,Menlo,Consolas,monospace; font-size:15px; background:var(--field); border:1px solid var(--hairline); border-radius:6px; padding:1px 6px; }
+pre.sum { display:block; padding:12px 14px; overflow-x:auto; white-space:pre-wrap; line-height:1.6; }
+table { border-collapse:collapse; width:100%; font-size:15px; margin:10px 0; }
+th, td { border-bottom:1px solid var(--hairline); padding:7px 6px; text-align:left; }
+th { color:var(--muted); font-weight:600; }
+details { border-top:1px solid var(--hairline); padding:10px 0; }
+details:last-of-type { border-bottom:1px solid var(--hairline); }
+summary { cursor:pointer; font-weight:700; }
+.app { margin-top:40px; border:2px solid var(--ink); border-radius:16px; padding:18px; }
+.app a.play { display:inline-block; margin-top:6px; font-weight:800; background:var(--ink); color:var(--ground); text-decoration:none; border-radius:12px; padding:11px 18px; }
+footer { margin-top:30px; color:var(--muted); font-size:14px; }
+@media (max-width:420px) { .row { grid-template-columns:1fr; } }
+</style>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"SoftwareApplication","name":"Tallyard","alternateName":"Drywall & Concrete Calculator","operatingSystem":"Android","applicationCategory":"UtilitiesApplication","description":"Material calculator for concrete slabs, footings and premix bags, drywall, paint, tile, flooring and more. Rounds purchase quantities up and lets you set a waste allowance.","url":"https://play.google.com/store/apps/details?id=com.appfellas.tallyard","installUrl":"https://play.google.com/store/apps/details?id=com.appfellas.tallyard","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"How many bags of concrete make a cubic yard?","acceptedAnswer":{"@type":"Answer","text":"This calculator assumes an 80 lb bag of standard premix makes 0.60 cubic feet of concrete, and that yield scales with bag weight. A cubic yard is 27 cubic feet, so it takes 45 bags of 80 lb, 60 bags of 60 lb, 72 bags of 50 lb or 90 bags of 40 lb, before any waste allowance."}},
+{"@type":"Question","name":"How many 25 kg bags of concrete are in a cubic metre?","acceptedAnswer":{"@type":"Answer","text":"At the same yield per kilogram, a 25 kg bag makes about 11.7 litres, so one cubic metre takes about 85.4 bags, which means buying 86. A 20 kg bag makes about 9.4 litres (107 bags per cubic metre) and a 40 kg bag about 18.7 litres (54 bags)."}},
+{"@type":"Question","name":"How do I work out cubic yards for a concrete slab?","acceptedAnswer":{"@type":"Answer","text":"Multiply length by width by thickness in feet, then divide by 27. A 10 x 10 ft slab 4 inches thick is 10 x 10 x 0.333 = 33.3 cubic feet, or 1.23 cubic yards. With a 10 percent waste allowance that becomes 1.36 cubic yards, or 62 bags of 80 lb premix."}},
+{"@type":"Question","name":"How much concrete does a round pier or post hole need?","acceptedAnswer":{"@type":"Answer","text":"Use the cylinder volume: pi x (diameter / 2) squared x depth, times the number of holes. A 12 inch diameter hole 48 inches deep holds 3.14 cubic feet. With 10 percent waste that is 3.46 cubic feet, which rounds up to 6 bags of 80 lb premix per hole."}}
+]}
+</script>
+</head>
+<body>
+<main>
+<header class="topbar">
+  <p class="crumb"><a href="./">Tallyard help</a> / concrete calculator</p>
+  <h1>Concrete Calculator<span class="sub">Cubic yards and bags for slabs, footings and piers</span></h1>
+  <p class="lead">Pick what you are pouring, enter the size, and get the volume, a ready-mix order and the number of premix bags to buy, waste included and rounded up.</p>
+</header>
+
+<div class="seg" role="group" aria-label="Units" style="margin-top:18px">
+  <button type="button" id="u-imp" aria-pressed="true">Feet / inches</button>
+  <button type="button" id="u-met" aria-pressed="false">Metres / cm</button>
+</div>
+
+<section class="card" aria-labelledby="calc">
+  <h2 id="calc">How much concrete do you need?</h2>
+  <form id="ccForm" novalidate>
+    <div class="row one"><div><label for="shape">What are you pouring?</label>
+      <select id="shape">
+        <option value="slab">Slab (patio, driveway, shed base)</option>
+        <option value="strip">Strip footing (trench)</option>
+        <option value="pad">Pad footings</option>
+        <option value="pier">Round piers (post holes, tube forms)</option>
+        <option value="bags">I already know the volume</option>
+      </select></div></div>
+    <div class="row" id="fields"></div>
+    <div class="row">
+      <div><label for="bag">Bag size</label><select id="bag"></select></div>
+      <div><label for="waste">Waste allowance (%)</label><input id="waste" inputmode="decimal" value="10"></div>
+    </div>
+    <button class="go" type="submit">Calculate concrete</button>
+  </form>
+  <div class="out" id="out" aria-live="polite"></div>
+</section>
+
+<h2>How it works</h2>
+<p>Every shape comes down to a volume, then the volume is turned into bags. All sizes are converted to one unit first (inches are divided by 12 to get feet, centimetres by 100 to get metres).</p>
+<pre class="sum">slab          = length x width x thickness
+strip footing = length x width x depth
+pad footings  = length x width x depth x number of pads
+round piers   = pi x (diameter / 2)^2 x depth x number of piers
+
+with waste    = volume x (1 + waste% / 100)
+cubic yards   = cubic feet / 27
+bags          = with waste / yield of one bag   -> rounded up</pre>
+<p>A worked example, a 10 x 10 ft patio slab, 4 in thick, 10% waste, 80 lb bags:</p>
+<pre class="sum">thickness      = 4 / 12                   = 0.333 ft
+volume         = 10 x 10 x 0.333          = 33.3 cu ft  (1.23 cu yd)
+with 10% waste = 33.3 x 1.10              = 36.7 cu ft  (1.36 cu yd)
+80 lb bag      = 0.60 cu ft
+bags           = 36.7 / 0.60 = 61.1       -> 62 bags
+ready-mix      = 1.36 cu yd               -> order 1.50 cu yd</pre>
+<p><strong>Bag yield.</strong> The calculator assumes an 80 lb bag of standard premix makes 0.60 cu ft of placed concrete, and that yield is proportional to bag weight, so a 60 lb bag makes 0.45 cu ft and a 40 lb bag 0.30 cu ft. Metric bags use the same yield per kilogram. Brands differ a little; if your bag prints a different yield, treat the count as a close estimate.</p>
+<p><strong>Ready-mix.</strong> The ready-mix line is the volume with waste, rounded up to the next quarter cubic yard (or the next 0.1 m&sup3; in metric).</p>
+<table>
+  <caption style="text-align:left;color:var(--muted);font-size:14px;caption-side:top">Yield per bag, using 0.60 cu ft for 80 lb</caption>
+  <thead><tr><th>Bag</th><th>Makes about</th><th>Bags per cu yd (or m&sup3;)</th></tr></thead>
+  <tbody id="yieldBody"></tbody>
+</table>
+
+<h2>Common questions</h2>
+<details open><summary>How many bags of concrete make a cubic yard?</summary><p>This calculator assumes an 80 lb bag of standard premix makes 0.60 cubic feet of concrete, and that yield scales with bag weight. A cubic yard is 27 cubic feet, so it takes 45 bags of 80 lb, 60 bags of 60 lb, 72 bags of 50 lb or 90 bags of 40 lb, before any waste allowance.</p></details>
+<details><summary>How many 25 kg bags of concrete are in a cubic metre?</summary><p>At the same yield per kilogram, a 25 kg bag makes about 11.7 litres, so one cubic metre takes about 85.4 bags, which means buying 86. A 20 kg bag makes about 9.4 litres (107 bags per cubic metre) and a 40 kg bag about 18.7 litres (54 bags).</p></details>
+<details><summary>How do I work out cubic yards for a concrete slab?</summary><p>Multiply length by width by thickness in feet, then divide by 27. A 10 x 10 ft slab 4 inches thick is 10 x 10 x 0.333 = 33.3 cubic feet, or 1.23 cubic yards. With a 10 percent waste allowance that becomes 1.36 cubic yards, or 62 bags of 80 lb premix.</p></details>
+<details><summary>How much concrete does a round pier or post hole need?</summary><p>Use the cylinder volume: pi x (diameter / 2) squared x depth, times the number of holes. A 12 inch diameter hole 48 inches deep holds 3.14 cubic feet. With 10 percent waste that is 3.46 cubic feet, which rounds up to 6 bags of 80 lb premix per hole.</p></details>
+<details><summary>How much waste should I add?</summary><p>5 to 10 percent is a usual range, because ground and trenches are rarely perfectly even and some mix is lost while mixing and finishing. The calculator starts at 10 percent.</p></details>
+<p>Doing drywall too? The <a href="drywall-concrete-calculator.html">drywall sheets and concrete bags calculator</a> covers boards and screws.</p>
+
+<aside class="app" aria-labelledby="apptitle">
+  <h2 id="apptitle" style="margin-top:0">Get the Android app</h2>
+  <p>Tallyard is the Android material calculator behind this page. Its slab, footing and concrete bag calculators use the same formulas and bag yields, and it also covers drywall, paint, tile, flooring, stairs and more. It keeps your measurements on your phone and shows ads that a one-time purchase removes.</p>
+  <a class="play" href="https://play.google.com/store/apps/details?id=com.appfellas.tallyard&amp;referrer=utm_source%3Dweb%26utm_medium%3Dseo%26utm_campaign%3Dconcrete_calculator">Get it on Google Play</a>
+</aside>
+<footer>These figures are estimates for planning a purchase, not engineering advice. Follow local building guidance for thickness, footing size and reinforcement. Contact: <a href="mailto:fellasontheway@gmail.com?subject=Tallyard">fellasontheway@gmail.com</a> &middot; <a href="privacy.html">Privacy</a></footer>
+</main>
+<script>
+(function () {
+  // Same constants and formulas as the Tallyard app (canonical metric: metres, m³, kg).
+  var FT = 0.3048, IN = 0.0254, YD = 0.9144, LB = 0.45359237, EPS = 1e-9;
+  var YIELD_PER_KG = (0.6 * FT * FT * FT) / (80 * LB);
+  var BAGS = {
+    lb40: ["40 lb", 40 * LB], lb50: ["50 lb", 50 * LB], lb60: ["60 lb", 60 * LB], lb80: ["80 lb", 80 * LB],
+    kg20: ["20 kg", 20], kg25: ["25 kg", 25], kg30: ["30 kg", 30], kg40: ["40 kg", 40]
+  };
+  var READY_MIX_STEP = { imperial: 0.25, metric: 0.1 };
+  function ceilCount(v) { return Math.ceil(v - EPS); }
+  function ceilToStep(v, step) { return ceilCount(v / step) * step; }
+  function withWaste(b, p) { return b * (1 + p / 100); }
+  function slabVolume(i) { return i.length * i.width * i.thickness; }
+  function footingVolume(i) {
+    switch (i.type) {
+      case "strip": return i.length * i.width * i.depth;
+      case "pad": return i.length * i.width * i.depth * i.count;
+      case "pier": return Math.PI * Math.pow(i.diameter / 2, 2) * i.depth * i.count;
+    }
+  }
+  function bagYield(k) { return BAGS[k][1] * YIELD_PER_KG; }
+  function bagsForVolume(v, k) { return ceilCount(v / bagYield(k)); }
+  function concreteEstimate(volume, waste, bag) {
+    var vw = withWaste(volume, waste);
+    return { volume: volume, volumeWithWaste: vw, bagSize: bag, bags: bagsForVolume(vw, bag) };
+  }
+  function readyMix(m3, system) {
+    return system === "imperial" ? ceilToStep(m3 / Math.pow(YD, 3), READY_MIX_STEP.imperial) : ceilToStep(m3, READY_MIX_STEP.metric);
+  }
+  // Number parsing as in the app: 12, 12.5, .5, 2,5, 1,250, 3/4, 10 1/2, 10-1/2.
+  function parseNumber(raw) {
+    var t = String(raw).trim().replace(/ /g, " "), m;
+    if (t === "" || t.charAt(0) === "-") return null;
+    if ((m = /^(\d+)[\s-]+(\d+)\/(\d+)$/.exec(t))) return Number(m[3]) === 0 ? null : Number(m[1]) + Number(m[2]) / Number(m[3]);
+    if ((m = /^(\d+)\/(\d+)$/.exec(t))) return Number(m[2]) === 0 ? null : Number(m[1]) / Number(m[2]);
+    if (/^\d{1,3}(,\d{3})+(\.\d+)?$/.test(t)) t = t.replace(/,/g, "");
+    else if (t.indexOf(",") >= 0 && t.indexOf(".") >= 0) t = t.lastIndexOf(",") > t.lastIndexOf(".") ? t.replace(/\./g, "").replace(",", ".") : t.replace(/,/g, "");
+    else if (t.indexOf(",") >= 0) { if ((t.match(/,/g) || []).length > 1) return null; t = t.replace(",", "."); }
+    if (!/^(\d+\.?\d*|\.\d+)$/.test(t)) return null;
+    var v = Number(t);
+    return isFinite(v) ? v : null;
+  }
+  var api = { slabVolume: slabVolume, footingVolume: footingVolume, bagYield: bagYield, bagsForVolume: bagsForVolume, concreteEstimate: concreteEstimate, readyMix: readyMix, parseNumber: parseNumber, BAGS: BAGS };
+  if (typeof module !== "undefined" && module.exports) module.exports = api;
+  if (typeof window !== "undefined") window.TALLY_CONCRETE = api;
+  if (typeof document === "undefined") return;
+
+  // kind: long = ft | m, short = in | cm, vol = cu yd | m³, count = plain number
+  var UNIT = { long: { imperial: ["ft", FT], metric: ["m", 1] }, short: { imperial: ["in", IN], metric: ["cm", 0.01] }, vol: { imperial: ["cu yd", Math.pow(YD, 3)], metric: ["m³", 1] } };
+  var SHAPES = {
+    slab: [["length", "Length", "long", 10, 3], ["width", "Width", "long", 10, 3], ["thickness", "Thickness", "short", 4, 10]],
+    strip: [["length", "Length", "long", 20, 6], ["width", "Width", "short", 12, 30], ["depth", "Depth", "short", 8, 20]],
+    pad: [["length", "Length of each pad", "short", 24, 60], ["width", "Width of each pad", "short", 24, 60], ["depth", "Depth", "short", 12, 30], ["count", "How many pads", "count", 4, 4]],
+    pier: [["diameter", "Diameter", "short", 12, 30], ["depth", "Depth", "short", 48, 120], ["count", "How many piers", "count", 4, 4]],
+    bags: [["volume", "Volume you need", "vol", 1, 1]]
+  };
+  var system = "imperial";
+  function $(id) { return document.getElementById(id); }
+  function fmt(n, d) { return n.toLocaleString("en-US", { minimumFractionDigits: 0, maximumFractionDigits: d }); }
+  function fmtFixed(n, d) { return n.toLocaleString("en-US", { minimumFractionDigits: d, maximumFractionDigits: d }); }
+  function isImpBag(k) { return k.indexOf("lb") === 0; }
+  function fillBags() {
+    var sel = $("bag"), cur = sel.value; sel.innerHTML = "";
+    Object.keys(BAGS).forEach(function (k) {
+      if (isImpBag(k) !== (system === "imperial")) return;
+      var o = document.createElement("option"); o.value = k; o.textContent = BAGS[k][0]; sel.appendChild(o);
+    });
+    sel.value = sel.querySelector('option[value="' + cur + '"]') ? cur : (system === "imperial" ? "lb80" : "kg25");
+  }
+  function renderFields() {
+    var box = $("fields"), shape = $("shape").value; box.innerHTML = "";
+    SHAPES[shape].forEach(function (f) {
+      var d = document.createElement("div"), unit = f[2] === "count" ? "" : " (" + UNIT[f[2]][system][0] + ")";
+      d.innerHTML = '<label for="f-' + f[0] + '"></label><input id="f-' + f[0] + '" inputmode="' + (f[2] === "count" ? "numeric" : "decimal") + '">';
+      d.firstChild.textContent = f[1] + unit;
+      d.lastChild.value = system === "imperial" ? f[3] : f[4];
+      box.appendChild(d);
+    });
+    box.className = SHAPES[shape].length === 1 ? "row one" : "row";
+  }
+  function err(msg) { $("out").innerHTML = '<span class="err">' + msg + "</span>"; }
+  function volText(m3) {
+    return system === "imperial" ? fmt(m3 / Math.pow(YD, 3), 2) + " cu yd" : fmt(m3, 2) + " m&sup3;";
+  }
+  function calculate() {
+    var shape = $("shape").value, v = {}, bad = false;
+    SHAPES[shape].forEach(function (f) {
+      var n = parseNumber($("f-" + f[0]).value);
+      if (n === null || n <= 0 || (f[2] === "count" && (n !== Math.floor(n) || n > 999))) bad = true;
+      v[f[0]] = f[2] === "count" ? n : n * UNIT[f[2]][system][1];
+    });
+    var wa = parseNumber($("waste").value);
+    if (bad) return err("Please fill in every box with a positive number" + (shape === "pad" || shape === "pier" ? " (whole numbers for how many)." : "."));
+    if (wa === null || wa > 100) return err("Waste allowance should be a number from 0 to 100.");
+    var volume = shape === "slab" ? slabVolume(v) : shape === "bags" ? v.volume : footingVolume({ type: shape, length: v.length, width: v.width, depth: v.depth, diameter: v.diameter, count: v.count });
+    var bag = $("bag").value, est = concreteEstimate(volume, wa, bag), imp = system === "imperial";
+    var others = Object.keys(BAGS).filter(function (k) { return isImpBag(k) === imp && k !== bag; });
+    var small = imp ? fmt(est.volumeWithWaste / Math.pow(FT, 3), 1) + " cu ft" : fmt(est.volumeWithWaste * 1000, 1) + " L";
+    var rm = readyMix(est.volumeWithWaste, system);
+    var html = '<span class="big">' + volText(est.volumeWithWaste) + " of concrete</span>" +
+      "<small>" + volText(est.volume) + " plus " + fmt(wa, 2) + "% waste (" + small + ").</small>" +
+      "<dl><dt>Premix bags (" + BAGS[bag][0] + ")</dt><dd>" + est.bags.toLocaleString("en-US") + " bag" + (est.bags === 1 ? "" : "s") + "</dd>" +
+      '<dt class="or">or</dt><dt>Ready-mix order</dt><dd>' + fmtFixed(rm, imp ? 2 : 1) + (imp ? " cu yd" : " m&sup3;") + "</dd></dl>" +
+      '<dl class="more">' + others.map(function (k) { var n = bagsForVolume(est.volumeWithWaste, k); return "<dt>With " + BAGS[k][0] + " bags</dt><dd>" + n.toLocaleString("en-US") + " bag" + (n === 1 ? "" : "s") + "</dd>"; }).join("") + "</dl>" +
+      "<small>Bag yields are typical for standard premix. Check the yield printed on your brand.</small>";
+    $("out").innerHTML = html;
+  }
+  function setUnits(imp) {
+    system = imp ? "imperial" : "metric";
+    $("u-imp").setAttribute("aria-pressed", imp); $("u-met").setAttribute("aria-pressed", !imp);
+    fillBags(); renderFields(); calculate();
+  }
+  $("u-imp").onclick = function () { setUnits(true); };
+  $("u-met").onclick = function () { setUnits(false); };
+  $("shape").onchange = function () { renderFields(); calculate(); };
+  $("bag").onchange = calculate;
+  $("ccForm").oninput = calculate;
+  $("ccForm").onsubmit = function (e) { e.preventDefault(); calculate(); };
+  var yb = $("yieldBody");
+  Object.keys(BAGS).forEach(function (k) {
+    var y = bagYield(k), tr = document.createElement("tr"), imp = isImpBag(k);
+    tr.innerHTML = "<td>" + BAGS[k][0] + "</td><td>" + (imp ? fmtFixed(y / Math.pow(FT, 3), 2) + " cu ft" : fmt(y * 1000, 1) + " L") + "</td><td>" +
+      (imp ? fmt(27 * Math.pow(FT, 3) / y, 1) + " per cu yd" : fmt(1 / y, 1) + " per m&sup3;") + "</td>";
+    yb.appendChild(tr);
+  });
+  setUnits(true);
+})();
+</script>
+</body>
+</html>
